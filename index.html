@@ -1,0 +1,3040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Seismic - Privacy First Blockchain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0f;
+      color: #e8ecf1;
+      position: relative;
+      z-index: 2;
+      --text-glow: rgba(223, 122, 184, 0.3);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+
+    /* 3D TEXT PERSPECTIVE */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    a,
+    span,
+    label {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        color 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        text-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backface-visibility: hidden;
+    }
+
+    /* ENHANCED TEXT HOVER - ALL TEXT ELEMENTS */
+    h1:hover,
+    h2:hover,
+    h3:hover,
+    h4:hover,
+    h5:hover,
+    h6:hover {
+      color: #df7ab0;
+      text-shadow: 0 0 15px rgba(223, 122, 176, 0.4);
+    }
+
+    p:hover,
+    a:hover,
+    label:hover,
+    span:hover {
+      color: #df7ab0;
+    }
+
+    p:hover,
+    a:hover {
+      text-shadow: 0 0 20px rgba(223, 122, 176, 0.4), 0 0 10px rgba(223, 122, 176, 0.2);
+      color: #df7ab0;
+      transform: translateZ(10px) rotateX(1deg) rotateY(-1deg);
+    }
+
+    label:hover,
+    span:hover {
+      text-shadow: 0 0 15px rgba(223, 122, 176, 0.3);
+      color: #df7ab0;
+      transform: translateZ(8px);
+    }
+
+    /* Background Grid */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(223, 122, 176, 0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(223, 122, 176, 0.012) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Seismic wave pulse background */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(223, 122, 176, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: seismicPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes seismicPulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scale(1.15);
+      }
+    }
+
+    /* 3D Background Canvas */
+    #bg3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* NAVBAR */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 80px;
+      background: rgba(12, 8, 15, 0.8);
+      border-bottom: 1px solid rgba(223, 122, 176, 0.15);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(30px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    nav img {
+      height: 45px;
+      filter: drop-shadow(0 0 12px rgba(223, 122, 176, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    nav img:hover {
+      transform: scale(1.1) rotateY(10deg);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 50px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #d8dce3;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.4s ease;
+      letter-spacing: 0.3px;
+      font-size: 0.95rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    nav a:hover {
+      color: #df7ab0;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, #df7ab0, #c45a90);
+      left: 0;
+      bottom: -8px;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .nav-version {
+      color: #8a92a0;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 200px 80px 100px;
+      position: relative;
+      text-align: center;
+    }
+
+    /* Soft depth blur layer for hero */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -100px;
+      background: radial-gradient(ellipse 600px 400px at center, rgba(223, 122, 176, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      z-index: 10;
+      perspective: 1200px;
+      animation: heroEnter 1s ease 0.2s both;
+    }
+
+    @keyframes heroEnter {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      margin: 0 0 30px 0;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      color: #e8ecf1;
+      perspective: 2000px;
+      display: inline-block;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(223, 122, 176, 0.4);
+    }
+
+    .hero h1 span {
+      display: inline-block;
+      animation: letterFlip 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+      transform-style: preserve-3d;
+      text-shadow: 0 0 20px rgba(223, 122, 176, 0.4);
+      transition: all 0.3s ease;
+      backface-visibility: hidden;
+    }
+
+    .hero h1 span:nth-child(1) {
+      animation-delay: 0.0s;
+    }
+
+    .hero h1 span:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    .hero h1 span:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    .hero h1 span:nth-child(4) {
+      animation-delay: 0.24s;
+    }
+
+    .hero h1 span:nth-child(5) {
+      animation-delay: 0.32s;
+    }
+
+    .hero h1 span:nth-child(6) {
+      animation-delay: 0.4s;
+    }
+
+    .hero h1 span:nth-child(7) {
+      animation-delay: 0.48s;
+    }
+
+    @keyframes letterFlip {
+      from {
+        opacity: 0;
+        transform: rotateX(90deg) rotateY(20deg) translateZ(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .hero h1 span:hover {
+      text-shadow: 0 0 40px rgba(223, 122, 176, 0.8);
+      transform: translateZ(30px) scale(1.15);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      color: #e8ecf1;
+      margin: 20px 0 40px;
+      font-weight: 300;
+      line-height: 1.8;
+      animation: fadeIn 1s ease 0.6s both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    .hero button {
+      margin-top: 20px;
+      padding: 16px 50px;
+      background: linear-gradient(135deg, rgba(223, 122, 176, 0.2), rgba(223, 122, 176, 0.1));
+      border: 2px solid rgba(223, 122, 176, 0.5);
+      border-radius: 10px;
+      color: #df7ab0;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 1s ease 0.8s both;
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+    }
+
+    .hero button:hover {
+      background: linear-gradient(135deg, rgba(223, 122, 176, 0.4), rgba(223, 122, 176, 0.2));
+      border-color: rgba(223, 122, 176, 0.8);
+      box-shadow: 0 0 40px rgba(223, 122, 176, 0.4);
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px)) translateY(-3px) scale(1.05);
+    }
+
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* CALCULATOR SECTION */
+    #calculator {
+      padding: 150px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    #calculator h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 80px;
+      color: #e8ecf1;
+      animation: slideDown 0.8s ease 0.2s both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .audit-progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(223, 122, 176, 0.1);
+      border-radius: 3px;
+      margin: 40px 0;
+      overflow: hidden;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #df7ab0, #c45a90);
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 20px rgba(223, 122, 176, 0.6);
+    }
+
+    .audit-card {
+      background: rgba(25, 15, 25, 0.6);
+      border: 1.5px solid rgba(223, 122, 176, 0.15);
+      padding: 50px 40px;
+      border-radius: 16px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: cardSlideIn 0.8s ease forwards;
+      position: relative;
+      overflow: hidden;
+      perspective: 1200px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px) rotateY(-20deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0deg);
+      }
+    }
+
+    .audit-card:hover {
+      border-color: rgba(223, 122, 176, 0.4);
+      background: rgba(25, 15, 25, 0.95);
+      box-shadow: 0 30px 80px rgba(223, 122, 176, 0.2);
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    .audit-card h3 {
+      color: #e8ecf1;
+      margin: 0 0 24px 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .audit-card label {
+      color: #e8ecf1;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .audit-card select {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(12, 8, 15, 0.8);
+      color: #e8ecf1;
+      border: 1px solid rgba(223, 122, 176, 0.2);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-top: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      will-change: border-color, box-shadow, background;
+    }
+
+    .audit-card select:hover {
+      border-color: rgba(223, 122, 176, 0.5);
+      background: rgba(12, 8, 15, 0.95);
+      box-shadow: 0 0 12px rgba(223, 122, 176, 0.15);
+    }
+
+    .audit-card select:focus {
+      outline: none;
+      border-color: rgba(223, 122, 176, 0.6);
+      box-shadow: 0 0 0 3px rgba(223, 122, 176, 0.1);
+    }
+
+    #calculator button {
+      width: 100%;
+      margin-top: 40px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(223, 122, 176, 0.3), rgba(223, 122, 176, 0.1));
+      border: 2px solid rgba(223, 122, 176, 0.5);
+      border-radius: 10px;
+      color: #df7ab0;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      letter-spacing: 0.5px;
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+    }
+
+    #calculator button:hover {
+      background: linear-gradient(135deg, rgba(223, 122, 176, 0.5), rgba(223, 122, 176, 0.3));
+      border-color: rgba(223, 122, 176, 0.8);
+      box-shadow: 0 0 30px rgba(223, 122, 176, 0.5);
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px)) translateY(-2px);
+    }
+
+    #scoreResult {
+      margin-top: 50px;
+      padding: 50px 40px;
+      background: rgba(12, 8, 15, 0.9);
+      border: 2px solid rgba(223, 122, 176, 0.3);
+      border-radius: 14px;
+      animation: resultReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-height: 300px;
+    }
+
+    @keyframes resultReveal {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(223, 122, 176, 0.3);
+      border-top-color: #df7ab0;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .report-title {
+      font-size: 1.8rem;
+      color: #df7ab0;
+      margin-bottom: 30px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .report-section {
+      margin: 30px 0;
+      color: #e8ecf1;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .report-section strong {
+      color: #e8ecf1;
+    }
+
+    .score-container {
+      text-align: center;
+      margin: 40px 0;
+      padding: 40px;
+      background: rgba(25, 15, 25, 0.5);
+      border-radius: 12px;
+      border: 1px solid rgba(223, 122, 176, 0.2);
+    }
+
+    .overall-score {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #df7ab0;
+      margin: 0;
+      animation: scorePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-shadow: 0 0 30px rgba(223, 122, 176, 0.6), 0 0 60px rgba(223, 122, 176, 0.3);
+    }
+
+    @keyframes scorePopIn {
+      from {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .score-label {
+      color: #e8ecf1;
+      font-size: 1rem;
+      margin-top: 10px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .metric-card {
+      background: rgba(25, 15, 25, 0.6);
+      border: 1px solid rgba(223, 122, 176, 0.2);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      animation: metricSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes metricSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .metric-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .metric-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .metric-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .metric-card:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #df7ab0;
+      margin: 10px 0;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: #e8ecf1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      font-weight: 600;
+    }
+
+    .metric-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(223, 122, 176, 0.1);
+      border-radius: 3px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .metric-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #df7ab0, #c45a90);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 15px rgba(223, 122, 176, 0.6);
+    }
+
+    .recommendation {
+      padding: 25px;
+      background: rgba(25, 15, 30, 0.6);
+      border-left: 4px solid #df7ab0;
+      border-radius: 8px;
+      margin: 30px 0;
+      animation: slideInLeft 0.6s ease 0.3s both;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .recommendation-title {
+      color: #df7ab0;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* LEARN SECTION */
+    .learn-section {
+      padding: 180px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 5;
+      text-align: center;
+    }
+
+    .learn-section h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #e8ecf1;
+      animation: titleWave 1s ease 0.3s both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    @keyframes titleWave {
+      from {
+        opacity: 0;
+        transform: translateY(-50px) scaleY(0.5);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+      }
+    }
+
+    .learn-subtitle {
+      font-size: 1.2rem;
+      color: #e8ecf1;
+      margin-bottom: 80px;
+      animation: fadeIn 1s ease 0.5s both;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .learn-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 50px;
+    }
+
+    .learn-box {
+      padding: 60px 45px;
+      background: rgba(25, 15, 25, 0.5);
+      border: 1.5px solid rgba(223, 122, 176, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: boxFloat 0.9s ease forwards;
+      position: relative;
+      overflow: hidden;
+      perspective: 1200px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes boxFloat {
+      from {
+        opacity: 0;
+        transform: translateY(80px) rotateX(20deg) scale(0.8);
+        filter: blur(10px);
+        will-change: transform, opacity, filter;
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg) scale(1);
+        filter: blur(0px);
+        will-change: auto;
+      }
+    }
+
+    .learn-box:hover {
+      transform: translateY(-25px) scale(1.08) rotateX(-8deg) rotateY(4deg);
+      border-color: rgba(223, 122, 176, 0.4);
+      background: rgba(25, 15, 25, 1);
+      box-shadow: 0 30px 80px rgba(223, 122, 176, 0.2);
+    }
+
+    .learn-box span {
+      font-size: 4.5rem;
+      display: block;
+      margin-bottom: 25px;
+      animation: iconBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s both;
+      transition: all 0.4s ease;
+      filter: drop-shadow(0 0 12px rgba(223, 122, 176, 0.4));
+    }
+
+    @keyframes iconBounce {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.3);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .learn-box:hover span {
+      transform: scale(1.4) rotateY(360deg);
+      filter: drop-shadow(0 0 25px rgba(223, 122, 176, 0.8));
+    }
+
+    .learn-box h3 {
+      font-size: 1.5rem;
+      color: #e8ecf1;
+      margin: 20px 0 16px;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .learn-box p {
+      color: #e8ecf1;
+      line-height: 1.8;
+      font-size: 1rem;
+      margin: 0;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* FEATURES SECTION */
+    .features-section {
+      padding: 180px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .features-section h2 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #e8ecf1;
+      animation: titleWave 1s ease 0.2s both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .feature-card {
+      padding: 50px 40px;
+      background: rgba(18, 10, 20, 0.6);
+      border: 1.5px solid rgba(223, 122, 176, 0.15);
+      border-radius: 16px;
+      animation: featureSlide 1s ease forwards;
+      backdrop-filter: blur(12px);
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      user-select: none;
+      will-change: transform;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    @keyframes featureSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-80px) rotateY(45deg);
+        will-change: transform, opacity;
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0deg);
+        will-change: auto;
+      }
+    }
+
+    .feature-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .feature-card:nth-child(2) {
+      animation-delay: 0.25s;
+    }
+
+    .feature-card:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .feature-card:nth-child(4) {
+      animation-delay: 0.1s;
+    }
+
+    .feature-card:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+
+    .feature-card:nth-child(6) {
+      animation-delay: 0.4s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(223, 122, 176, 0.4);
+      background: rgba(18, 10, 20, 1);
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 30px 80px rgba(223, 122, 176, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      animation: iconFloat 2s ease-in-out infinite;
+      transition: all 0.4s ease;
+    }
+
+    @keyframes iconFloat {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.3) rotateY(360deg);
+      filter: drop-shadow(0 0 20px rgba(223, 122, 176, 0.6));
+    }
+
+    .feature-card h4 {
+      font-size: 1.3rem;
+      color: #e8ecf1;
+      margin: 15px 0;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .feature-card p {
+      color: #e8ecf1;
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin: 0;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* EXPLAIN SECTION - What is Seismic */
+    .explain-section {
+      padding: 180px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Soft depth blur layer for explain section */
+    .explain-section::before {
+      content: "";
+      position: absolute;
+      inset: -100px;
+      background: radial-gradient(ellipse 700px 450px at center, rgba(223, 122, 176, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    .explain-section h2 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 80px;
+      color: #e8ecf1;
+      animation: titleWave 1s ease 0.2s both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    .explain-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .explain-text {
+      animation: textSlideIn 1s ease 0.3s both;
+    }
+
+    @keyframes textSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-80px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .explain-text h3 {
+      font-size: 2rem;
+      color: #e8ecf1;
+      margin: 0 0 30px 0;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .explain-text p {
+      color: #e8ecf1;
+      line-height: 2;
+      font-size: 1.05rem;
+      margin: 0 0 24px 0;
+      font-weight: 300;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .explain-text p strong {
+      color: #df7ab0;
+      font-weight: 600;
+    }
+
+    .explain-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      animation: visualSlideIn 1s ease 0.5s both;
+    }
+
+    @keyframes visualSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(80px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .explain-box {
+      padding: 40px 35px;
+      background: rgba(25, 15, 30, 0.7);
+      border: 2px solid rgba(223, 122, 176, 0.3);
+      border-radius: 14px;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .explain-box:hover {
+      border-color: rgba(223, 122, 176, 0.8);
+      background: rgba(25, 15, 30, 1);
+      transform: translateY(-12px) rotateX(-8deg) rotateY(5deg) scale(1.05);
+      box-shadow: 0 40px 100px rgba(223, 122, 176, 0.3);
+    }
+
+    .explain-box .icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+      transition: all 0.4s ease;
+    }
+
+    .explain-box:hover .icon {
+      transform: scale(1.2) rotateY(-20deg);
+      filter: drop-shadow(0 0 15px rgba(223, 122, 176, 0.5));
+    }
+
+    .explain-box h4 {
+      font-size: 1.2rem;
+      color: #e8ecf1;
+      margin: 15px 0 12px 0;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .explain-box p {
+      color: #e8ecf1;
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin: 0;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ABOUT SECTION */
+    .about-section {
+      padding: 200px 80px;
+      background: linear-gradient(180deg, transparent, rgba(223, 122, 176, 0.05));
+      position: relative;
+      margin-top: 100px;
+    }
+
+    .about-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-title {
+      text-align: center;
+      font-size: 3.2rem;
+      margin-bottom: 80px;
+      color: #e8ecf1;
+      animation: titleWave 1s ease both;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 60px;
+    }
+
+    .about-card {
+      padding: 60px 50px;
+      background: rgba(25, 15, 25, 0.6);
+      border: 1.5px solid rgba(223, 122, 176, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      animation: cardPopup 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      perspective: 1200px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    @keyframes cardPopup {
+      from {
+        opacity: 0;
+        transform: scale(0.5) translateY(60px) rotateX(30deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotateX(0deg);
+      }
+    }
+
+    .about-card:nth-child(1) {
+      animation-delay: 0.15s;
+    }
+
+    .about-card:nth-child(2) {
+      animation-delay: 0.35s;
+    }
+
+    .about-card:nth-child(3) {
+      animation-delay: 0.55s;
+    }
+
+    .about-card:hover {
+      border-color: rgba(223, 122, 176, 0.4);
+      background: rgba(25, 15, 25, 1);
+      transform: translateY(-20px) scale(1.08) rotateX(-5deg) rotateY(5deg);
+      box-shadow: 0 30px 80px rgba(223, 122, 176, 0.2);
+    }
+
+    .about-card h3 {
+      font-size: 1.6rem;
+      color: #e8ecf1;
+      margin: 0 0 20px;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .about-card p {
+      color: #e8ecf1;
+      line-height: 1.9;
+      font-size: 0.95rem;
+      margin: 0 0 20px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .about-card a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: rgba(223, 122, 176, 0.15);
+      border: 1px solid rgba(223, 122, 176, 0.3);
+      border-radius: 8px;
+      color: #df7ab0;
+      text-decoration: none;
+      margin: 5px 10px 5px 0;
+      transition: all 0.4s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+    }
+
+    .about-card a:hover {
+      background: rgba(223, 122, 176, 0.3);
+      border-color: rgba(223, 122, 176, 0.6);
+      box-shadow: 0 0 20px rgba(223, 122, 176, 0.3);
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px)) translateY(-3px);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 60px 40px;
+      border-top: 2px solid rgba(223, 122, 176, 0.15);
+      color: #a8b2ba;
+      font-size: 0.9rem;
+      background: rgba(8, 5, 12, 0.8);
+      animation: footerRise 0.8s ease 0.5s both;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    @keyframes footerRise {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    footer a {
+      color: #df7ab0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e8ecf1;
+    }
+
+    /* Scroll reveal */
+    .revealed {
+      animation: revealOnScroll 0.8s ease forwards;
+    }
+
+    @keyframes revealOnScroll {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .metric-card {
+      transition: all 0.4s ease;
+    }
+
+    .metric-card:hover {
+      border-color: rgba(223, 122, 176, 0.5);
+      background: rgba(25, 15, 25, 0.9);
+      transform: translateY(-5px);
+    }
+
+    @media (max-width: 768px) {
+      .explain-content {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .explain-visual {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .overall-score {
+        font-size: 3rem;
+      }
+    }
+
+    @keyframes fillBar {
+      from {
+        width: 0% !important;
+      }
+
+      to {
+        width: 100% !important;
+      }
+    }
+
+    .score-pie-chart {
+      width: 220px;
+      height: 220px;
+      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: chartAppear 0.8s ease forwards;
+    }
+
+    @keyframes chartAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.5) rotateZ(-45deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) rotateZ(0deg);
+      }
+    }
+
+    #scorePieChart svg {
+      filter: drop-shadow(0 0 20px rgba(223, 122, 176, 0.4));
+    }
+
+    .pie-slice-0 {
+      animation: pieGlowPink 3s ease-in-out infinite;
+    }
+
+    .pie-slice-1 {
+      animation: pieGlowPink 3s ease-in-out infinite 0.75s;
+    }
+
+    .pie-slice-2 {
+      animation: pieGlowPink 3s ease-in-out infinite 1.5s;
+    }
+
+    .pie-slice-3 {
+      animation: pieGlowPink 3s ease-in-out infinite 2.25s;
+    }
+
+    @keyframes pieGlowPink {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 5px rgba(223, 122, 176, 0.4));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 15px rgba(223, 122, 176, 0.8));
+      }
+    }
+
+    @keyframes scorePopIn {
+      from {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
+    @media (pointer: fine) {
+      * {
+        cursor: none !important;
+      }
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      border: 2px solid rgba(223, 122, 176, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, background 0.2s ease, opacity 0.25s ease;
+      mix-blend-mode: screen;
+      opacity: 0;
+      will-change: transform;
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: #df7ab0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, opacity 0.3s ease;
+      box-shadow: 0 0 8px rgba(223, 122, 176, 0.6), 0 0 18px rgba(223, 122, 176, 0.2);
+      opacity: 0;
+      will-change: transform;
+    }
+
+    .cursor-ring.active {
+      width: 46px;
+      height: 46px;
+      border-color: rgba(223, 122, 176, 0.8);
+      background: rgba(223, 122, 176, 0.06);
+    }
+
+    .cursor-dot.active {
+      width: 4px;
+      height: 4px;
+      background: #fff;
+    }
+
+    .cursor-ring.clicking {
+      width: 26px;
+      height: 26px;
+      border-color: rgba(223, 122, 176, 1);
+      background: rgba(223, 122, 176, 0.15);
+    }
+
+    @media (pointer: coarse),
+    (max-width: 768px) {
+
+      .cursor-ring,
+      .cursor-dot {
+        display: none !important;
+      }
+
+      * {
+        cursor: auto !important;
+      }
+    }
+
+    /* ===== BACKERS SECTION ===== */
+    .backers-section {
+      padding: 150px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      text-align: center;
+      z-index: 5;
+    }
+
+    .backers-section h2 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: #e8ecf1;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+    }
+
+    .backers-subtitle {
+      font-size: 1.15rem;
+      color: #a8b2c0;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .funding-badge {
+      display: inline-block;
+      padding: 10px 30px;
+      background: linear-gradient(135deg, rgba(223, 122, 176, 0.2), rgba(223, 122, 176, 0.08));
+      border: 1.5px solid rgba(223, 122, 176, 0.4);
+      border-radius: 50px;
+      color: #df7ab0;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 60px;
+      letter-spacing: 0.5px;
+      animation: fadeIn 1s ease 0.3s both;
+      text-shadow: 0 0 20px rgba(223, 122, 176, 0.3);
+      transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+    }
+
+    .backers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .backer-card {
+      padding: 35px 25px;
+      background: rgba(25, 15, 25, 0.5);
+      border: 1.5px solid rgba(223, 122, 176, 0.12);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      animation: backerSlide 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    .backer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(223, 122, 176, 0.05), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .backer-card:hover::before {
+      left: 100%;
+    }
+
+    @keyframes backerSlide {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .backer-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .backer-card:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .backer-card:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .backer-card:nth-child(4) {
+      animation-delay: 0.25s;
+    }
+
+    .backer-card:nth-child(5) {
+      animation-delay: 0.3s;
+    }
+
+    .backer-card:nth-child(6) {
+      animation-delay: 0.35s;
+    }
+
+    .backer-card:nth-child(7) {
+      animation-delay: 0.4s;
+    }
+
+    .backer-card:nth-child(8) {
+      animation-delay: 0.45s;
+    }
+
+    .backer-card:hover {
+      border-color: rgba(223, 122, 176, 0.5);
+      background: rgba(25, 15, 25, 0.95);
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 60px rgba(223, 122, 176, 0.2), 0 0 30px rgba(223, 122, 176, 0.08);
+    }
+
+    .backer-card .backer-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      display: block;
+      transition: all 0.4s ease;
+      filter: drop-shadow(0 0 8px rgba(223, 122, 176, 0.3));
+    }
+
+    .backer-card:hover .backer-icon {
+      transform: scale(1.2) rotateY(180deg);
+      filter: drop-shadow(0 0 15px rgba(223, 122, 176, 0.6));
+    }
+
+    .backer-card .backer-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #e8ecf1;
+      margin-bottom: 6px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .backer-card .backer-role {
+      font-size: 0.8rem;
+      color: #df7ab0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .backer-card.lead-investor {
+      border-color: rgba(223, 122, 176, 0.35);
+      background: rgba(25, 15, 25, 0.7);
+      grid-column: span 1;
+    }
+
+    .backer-card.lead-investor .backer-name {
+      color: #df7ab0;
+      font-size: 1.15rem;
+    }
+
+    .backers-footer {
+      margin-top: 40px;
+      color: #6a7585;
+      font-size: 0.9rem;
+    }
+
+    .backers-footer a {
+      color: #df7ab0;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .backers-footer a:hover {
+      color: #e8ecf1;
+      text-shadow: 0 0 15px rgba(223, 122, 176, 0.4);
+    }
+
+    /* ===== CLICK RIPPLE EFFECT ===== */
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(223, 122, 176, 0.3);
+      transform: scale(0);
+      animation: rippleAnim 0.6s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ===== CARD SPOTLIGHT EFFECT ===== */
+    .card-spotlight {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(223, 122, 176, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* ===== SCROLL PROGRESS BAR ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #df7ab0, #e8a0c8, #df7ab0);
+      z-index: 10000;
+      width: 0%;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 10px rgba(223, 122, 176, 0.6);
+    }
+
+    /* ===== AURORA BACKGROUND ===== */
+    .aurora {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .aurora::before {
+      content: '';
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      top: -25%;
+      left: -25%;
+      background: radial-gradient(ellipse at 20% 50%, rgba(223, 122, 176, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(200, 100, 160, 0.06) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(180, 80, 140, 0.05) 0%, transparent 50%);
+      animation: auroraDrift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraDrift {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      50% {
+        transform: translate(3%, -2%) rotate(2deg);
+      }
+
+      100% {
+        transform: translate(-2%, 3%) rotate(-1deg);
+      }
+    }
+
+    /* ===== NOISE GRAIN OVERLAY ===== */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ===== HERO TEXT TUNED FOR SHARPNESS ===== */
+    .hero h1 {
+      /* keep base color/text-shadow from earlier definition; avoid extra gradient layers to reduce blur */
+      background: none;
+      -webkit-background-clip: border-box;
+      background-clip: border-box;
+      -webkit-text-fill-color: currentColor;
+    }
+
+    .hero h1 span {
+      -webkit-text-fill-color: currentColor;
+    }
+
+    /* ===== FLOATING LOGO WATERMARK ===== */
+    .logo-watermark {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .logo-watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(1.5) drop-shadow(0 0 40px rgba(223, 122, 176, 0.3));
+    }
+
+    /* ===== SECTION LOGO ACCENT ===== */
+    .section-logo-accent {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 8px rgba(223, 122, 176, 0.4));
+    }
+
+    /* ===== WAVE DIVIDER ===== */
+    .wave-divider {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wave-divider svg {
+      display: block;
+      width: 100%;
+      height: 60px;
+    }
+
+    .wave-divider.flip {
+      transform: rotate(180deg);
+    }
+
+    /* ===== STAGGERED TEXT REVEAL ===== */
+    .text-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .text-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== ENHANCED AUDIT GAUGE ===== */
+    .score-gauge {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 30px;
+    }
+
+    .score-gauge svg {
+      width: 200px;
+      height: 200px;
+      transform: rotate(-90deg);
+    }
+
+    .score-gauge .gauge-bg {
+      fill: none;
+      stroke: rgba(223, 122, 176, 0.1);
+      stroke-width: 12;
+    }
+
+    .score-gauge .gauge-fill {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 0 8px rgba(223, 122, 176, 0.5));
+    }
+
+    .score-gauge .gauge-score {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .score-gauge .gauge-number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #df7ab0;
+      text-shadow: 0 0 20px rgba(223, 122, 176, 0.5);
+    }
+
+    .score-gauge .gauge-label {
+      font-size: 0.85rem;
+      color: #a8b2c0;
+      margin-top: 4px;
+    }
+
+    @keyframes gaugePulse {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 8px rgba(223, 122, 176, 0.5));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 20px rgba(223, 122, 176, 0.8));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SCROLL PROGRESS BAR -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- AURORA + GRAIN -->
+  <div class="aurora"></div>
+  <div class="grain-overlay"></div>
+
+  <div id="bg3d"></div>
+  <div class="bg-blur"></div>
+
+
+  <!-- NAVBAR -->
+  <nav>
+    <img src="images/logo.png" alt="Seismic">
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#calculator">Audit</a></li>
+      <li><a href="#learn">Learn</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#backers">Backers</a></li>
+      <li><a href="#explain">What is Seismic</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-version">encryption</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>
+        <span>S</span><span>e</span><span>i</span><span>s</span><span>m</span><span>i</span><span>c</span>
+      </h1>
+      <p>Privacy-First Blockchain for Fintechs</p>
+      <p>Devnet now live. The infrastructure layer that makes privacy default. For developers building financial apps
+        that protect users.</p>
+      <button onclick="document.getElementById('explain').scrollIntoView({behavior: 'smooth'})">
+        Learn How It Works
+      </button>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section id="calculator">
+    <h2>Privacy Audit</h2>
+    <div class="audit-progress">
+      <div id="progressFill"></div>
+    </div>
+
+    <div class="audit-card">
+      <h3>Wallet Hygiene</h3>
+      <label>Do you reuse your main wallet?</label>
+      <select id="w1">
+        <option value="0">Always</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Never</option>
+      </select>
+      <label>Do you separate trading and holding wallets?</label>
+      <select id="w2">
+        <option value="0">No</option>
+        <option value="5">Partially</option>
+        <option value="10">Yes</option>
+      </select>
+      <label>Do you use burner wallets?</label>
+      <select id="w3">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Often</option>
+      </select>
+    </div>
+
+    <div class="audit-card">
+      <h3>dApp Exposure</h3>
+      <label>Do you connect to unknown websites?</label>
+      <select id="d1">
+        <option value="0">Often</option>
+        <option value="5">Rarely</option>
+        <option value="10">Never</option>
+      </select>
+      <label>Do you revoke token approvals?</label>
+      <select id="d2">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Regularly</option>
+      </select>
+      <label>Do you check contracts before signing?</label>
+      <select id="d3">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Always</option>
+      </select>
+    </div>
+
+    <div class="audit-card">
+      <h3> Transaction Privacy</h3>
+      <label>Do you hide your balances?</label>
+      <select id="p1">
+        <option value="0">Show public</option>
+        <option value="5">Partially hidden</option>
+        <option value="10">Fully private</option>
+      </select>
+      <label>Do you use privacy pools?</label>
+      <select id="p2">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Always</option>
+      </select>
+      <label>Do you monitor address correlations?</label>
+      <select id="p3">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Always</option>
+      </select>
+    </div>
+
+    <div class="audit-card">
+      <h3>Device Security</h3>
+      <label>Is your device secured?</label>
+      <select id="s1">
+        <option value="0">Not really</option>
+        <option value="5">Mostly</option>
+        <option value="10">Fully secured</option>
+      </select>
+      <label>Do you use hardware wallets?</label>
+      <select id="s2">
+        <option value="0">No</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Always</option>
+      </select>
+      <label>Do you keep software updated?</label>
+      <select id="s3">
+        <option value="0">Never</option>
+        <option value="5">Sometimes</option>
+        <option value="10">Always</option>
+      </select>
+    </div>
+
+    <button onclick="runAudit()">Run Audit</button>
+    <div id="scoreResult"></div>
+  </section>
+
+  <!-- LEARN SECTION -->
+  <section class="learn-section" id="learn">
+    <h2> Learn Seismic Basics</h2>
+    <p class="learn-subtitle">Understand privacy on the blockchain</p>
+
+    <div class="learn-container">
+      <div class="learn-box">
+        <span>🔗</span>
+        <h3>Why Privacy Blockchain?</h3>
+        <p>Normal blockchains show every transaction. With Seismic, your financial data stays private while still being
+          verifiable and compliant. The best of both worlds.</p>
+      </div>
+
+      <div class="learn-box">
+        <span>⚙️</span>
+        <h3>How Seismic Works</h3>
+        <p>Seismic uses encrypted execution to hide transaction details. Your data is protected from public view, but
+          regulators can still see what they need when required.</p>
+      </div>
+
+      <div class="learn-box">
+        <span></span>
+        <h3>Built for Builders</h3>
+        <p>If you know Solidity and Ethereum, you already know how to build on Seismic. Write the same code, get privacy
+          by default. Simple.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features-section" id="features">
+    <h2> What Seismic Gives You</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h4>Complete Privacy</h4>
+        <p>All transactions are private by default. Transfers, loans, and swaps protected from blockchain analysis.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h4>Compliance Built-In</h4>
+        <p>Transaction screening and reporting baked into the blockchain. Regulators get what they need. Users get
+          privacy.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h4>Global Integration</h4>
+        <p>Deep connections with payment providers and on/off-ramp services worldwide. Easy money movement.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⛓️</div>
+        <h4>EVM Compatible</h4>
+        <p>Use Solidity. Use your Ethereum knowledge. Build the same way you're used to, with privacy built in.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h4>Made for Finance</h4>
+        <p>Built from the ground up for financial applications. Every piece designed thinking about fintechs and users.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h4>Devnet Live Now</h4>
+        <p>Test on devnet today. Funded by a16z. Built by serious builders. Coming to mainnet soon.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE DIVIDER -->
+  <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z" fill="rgba(25,15,25,0.3)" />
+    </svg></div>
+
+  <!-- BACKERS SECTION -->
+  <section class="backers-section" id="backers">
+    <img src="images/logo.png" alt=""
+      style="width:60px;height:60px;margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(223,122,176,0.4));animation:iconFloat 3s ease-in-out infinite;">
+    <h2>Backed by the Best</h2>
+    <p class="backers-subtitle">World-class investors building the future of private finance</p>
+    <div class="funding-badge">💰 <span id="fundingCounter">$17M</span> Total Funding</div>
+
+    <div class="backers-grid">
+      <div class="backer-card lead-investor">
+        <span class="backer-icon">🏛️</span>
+        <div class="backer-name">a16z crypto</div>
+        <div class="backer-role">Lead Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">Polychain</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">1kx</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">Amber Group</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">dao5</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">TrueBridge Capital</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">Alliance</div>
+        <div class="backer-role">Investor</div>
+      </div>
+      <div class="backer-card">
+        <span class="backer-icon"></span>
+        <div class="backer-name">LayerZero Labs</div>
+        <div class="backer-role">Investor</div>
+      </div>
+    </div>
+
+    <div class="backers-footer">
+      <a href="https://fortune.com/2025/11/12/crypto-startup-seismic-raises-10-million-to-help-fintechs-protect-customer-data/"
+        target="_blank">Read about the funding →</a>
+    </div>
+  </section>
+
+  <!-- EXPLAIN SECTION -->
+  <section class="explain-section" id="explain">
+    <h2>What is Seismic?</h2>
+
+    <div class="explain-content">
+      <div class="explain-text">
+        <h3>Privacy Blockchain, Explained Simply</h3>
+        <p>Think of Seismic like Ethereum, but with privacy. It's a blockchain where <strong>everything stays private by
+            default</strong>.</p>
+
+        <p>On a regular blockchain, everyone sees every wallet balance, every trade, every payment. It's like living in
+          a financial fishbowl.</p>
+
+        <p>Seismic changes that. You can still do everything (payments, loans, swaps), but <strong>your activity stays
+            hidden</strong>.</p>
+
+        <p>For developers: <strong>Write normal Solidity code</strong>. Build just like Ethereum. Get privacy for free.
+        </p>
+
+        <p>For regulators: <strong>They still see what they need</strong>. Compliance tools are built in. Privacy and
+          regulation work together.</p>
+      </div>
+
+      <div class="explain-visual">
+        <div class="explain-box">
+          <span class="icon"></span>
+          <h4>Hidden Transactions</h4>
+          <p>Your balances, trades, and history stay private from everyone except you.</p>
+        </div>
+
+        <div class="explain-box">
+          <span class="icon"></span>
+          <h4>Compliance Works</h4>
+          <p>Regulators see what they need. Built-in screening and reporting tools.</p>
+        </div>
+
+        <div class="explain-box">
+          <span class="icon"></span>
+          <h4>Solidity Works</h4>
+          <p>Write code exactly like Ethereum. No new language. No new learning.</p>
+        </div>
+
+        <div class="explain-box">
+          <span class="icon"></span>
+          <h4>Real Financial Apps</h4>
+          <p>Payments, loans, trading, swaps. Real products that protect privacy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="about-section" id="about">
+    <div class="about-container">
+      <h2 class="about-title">About This Project</h2>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <h3> Independent Builder</h3>
+          <p>Community-built tool inspired by Seismic Protocol. Created to help people understand privacy in Web3 and
+            how Seismic is changing financial apps for the better.</p>
+        </div>
+
+        <div class="about-card">
+          <h3> Connect</h3>
+          <p>Join the Seismic community. Chat with builders, learn from others, be part of changing how financial
+            privacy works.</p>
+          <a href="https://discord.com/invite/seismic" target="_blank">Discord</a>
+          <a href="https://x.com/SeismicSys" target="_blank">X / Twitter</a>
+          <a href="https://www.seismic.systems/" target="_blank">Official Site</a>
+        </div>
+
+        <div class="about-card">
+          <h3> Learn More</h3>
+          <p>Dive deeper into how Seismic works. Check out docs, code, and technical resources.</p>
+          <a href="https://docs.seismic.systems/" target="_blank">Documentation</a>
+          <a href="https://github.com/SeismicSystems" target="_blank">GitHub</a>
+          <a href="https://docs.seismic.systems/appendix/deploy-tools" target="_blank">Deploy Tools</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE DIVIDER -->
+  <div class="wave-divider flip"><svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z" fill="rgba(25,15,25,0.3)" />
+    </svg></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Seismic • Community Tool • Built by Dex for the Web3 community</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+
+    /* ===== 3D SCENE ===== */
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a0a0f);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 8.5;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    document.getElementById("bg3d").appendChild(renderer.domElement);
+
+    // Lighting
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    keyLight.position.set(6, 5, 5);
+    keyLight.shadow.mapSize.width = 2048;
+    keyLight.shadow.mapSize.height = 2048;
+    scene.add(keyLight);
+
+    const rimLight = new THREE.DirectionalLight(0xa54a6f, 0.7);
+    rimLight.position.set(-6, -3, -8);
+    scene.add(rimLight);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
+    scene.add(ambientLight);
+
+    // Enhanced fog and depth effects
+
+    // Use linear fog for depth effect
+    scene.fog = new THREE.Fog(0x0a0a0f, 5, 25);
+
+    const restraintGroup = new THREE.Group();
+    scene.add(restraintGroup);
+
+    // Wireframe sphere
+    const sphereGeo = new THREE.SphereGeometry(3.5, 64, 64);
+    const sphereMat = new THREE.MeshBasicMaterial({ color: 0x3a2a35, wireframe: true, transparent: true, opacity: 0.5 });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    restraintGroup.add(sphere);
+
+    // Chain bands
+    function createChainBand(axis, linkCount) {
+      const bandGroup = new THREE.Group();
+      const chainMat = new THREE.MeshStandardMaterial({ color: 0x2a1a25, metalness: 0.8, roughness: 0.2, side: THREE.DoubleSide });
+      const sphereRadius = 3.9;
+
+      for (let i = 0; i < linkCount; i++) {
+        const angle = (i / linkCount) * Math.PI * 2;
+        const linkGeo = new THREE.TorusGeometry(0.32, 0.08, 10, 36);
+        const link = new THREE.Mesh(linkGeo, chainMat);
+
+        if (axis === 'x') {
+          link.position.x = Math.cos(angle) * sphereRadius;
+          link.position.z = Math.sin(angle) * sphereRadius;
+          link.position.y = 0;
+          link.rotation.y = angle;
+          link.rotation.x = Math.PI / 2;
+        } else {
+          link.position.y = Math.cos(angle) * sphereRadius;
+          link.position.z = Math.sin(angle) * sphereRadius;
+          link.position.x = 0;
+          link.rotation.z = angle;
+          link.rotation.y = Math.PI / 2;
+        }
+        bandGroup.add(link);
+      }
+      restraintGroup.add(bandGroup);
+      return bandGroup;
+    }
+
+    const bandX = createChainBand('x', 26);
+    const bandY = createChainBand('y', 26);
+
+    // Particles
+    const particleGeometry = new THREE.BufferGeometry();
+    const particleCount = 120;
+    const positions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 4.5 + Math.random() * 3;
+      const y = (Math.random() - 0.5) * 8;
+      positions[i] = Math.cos(angle) * radius;
+      positions[i + 1] = y;
+      positions[i + 2] = Math.sin(angle) * radius;
+    }
+
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particleMaterial = new THREE.PointsMaterial({ color: 0xdf7ab0, size: 0.08, transparent: true, opacity: 0.6, sizeAttenuation: true });
+    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    restraintGroup.add(particles);
+
+    const initialY = new Float32Array(particleCount);
+    for (let i = 0; i < particleCount; i++) {
+      initialY[i] = positions[i * 3 + 1];
+    }
+
+    let mouseX = 0, mouseY = 0, scrollVelocity = 0, lastScrollY = 0;
+    let time = 0;
+
+    // Smooth 3D tilt tracking with mobile detection
+    let cardRotations = {};
+    let tiltEnabled = window.innerWidth > 1024; // Disable tilt on mobile to prevent bugs
+
+    window.addEventListener('resize', () => {
+      tiltEnabled = window.innerWidth > 1024;
+      if (!tiltEnabled) {
+        document.querySelectorAll('.feature-card, .explain-box, .learn-box, .about-card').forEach(card => {
+          card.style.transform = 'none';
+          card.style.transition = 'all 0.4s ease';
+        });
+      }
+    });
+
+    let lastMouseTime = 0;
+    let tiltTimeout;
+
+    const tiltCardsSelector = '.feature-card, .explain-box, .learn-box, .about-card';
+    let tiltRaf = 0;
+    let tiltMouseX = 0;
+    let tiltMouseY = 0;
+
+    function applyTiltFrame() {
+      tiltRaf = 0;
+      if (!tiltEnabled) return;
+
+      document.querySelectorAll(tiltCardsSelector).forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          const x = (tiltMouseX - rect.left) / rect.width - 0.5;
+          const y = (tiltMouseY - rect.top) / rect.height - 0.5;
+          const rotX = y * 8;
+          const rotY = x * 8;
+          card.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(10px)`;
+          card.style.transition = 'transform 0.08s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }
+      });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      if (!tiltEnabled) return;
+
+      lastMouseTime = Date.now();
+      clearTimeout(tiltTimeout);
+
+      tiltMouseX = e.clientX;
+      tiltMouseY = e.clientY;
+      if (!tiltRaf) tiltRaf = requestAnimationFrame(applyTiltFrame);
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+      if (!tiltEnabled) return;
+      const cards = document.querySelectorAll('.feature-card, .explain-box, .learn-box, .about-card');
+      cards.forEach(card => {
+        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      });
+      tiltTimeout = setTimeout(() => {
+        cards.forEach(card => card.style.transition = 'all 0.4s ease');
+      }, 500);
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const delta = Math.abs(scrollY - lastScrollY);
+      lastScrollY = scrollY;
+      scrollVelocity = delta * 0.005;
+    }, { passive: true });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 1;
+
+      sphere.rotation.y += 0.0012;
+      sphere.rotation.x += 0.0005;
+
+      bandX.rotation.y += 0.0025;
+      bandX.rotation.x += 0.0008;
+      bandY.rotation.x += 0.002;
+      bandY.rotation.z += 0.0007;
+
+      restraintGroup.rotation.y += 0.0005;
+      restraintGroup.position.y = Math.sin(time * 0.004) * 0.12 + Math.sin(time * 0.002) * 0.06;
+
+      const positionAttribute = particleGeometry.attributes.position;
+      const pos = positionAttribute.array;
+      const particleRotation = (time * 0.00003) % (Math.PI * 2);
+      const particleVerticalWave = time * 0.0003;
+
+      for (let i = 0; i < particleCount; i++) {
+        const originalX = positions[i * 3];
+        const originalZ = positions[i * 3 + 2];
+        const radius = Math.sqrt(originalX * originalX + originalZ * originalZ);
+        const angle = Math.atan2(originalZ, originalX) + particleRotation * (0.08 + (i % 5) * 0.015);
+
+        pos[i * 3] = Math.cos(angle) * radius;
+        pos[i * 3 + 2] = Math.sin(angle) * radius;
+
+        const normalizedWave = particleVerticalWave % (Math.PI * 2);
+        const bobRange = 0.2;
+        pos[i * 3 + 1] = initialY[i] + Math.sin(normalizedWave + i * 0.2) * bobRange;
+      }
+
+      positionAttribute.needsUpdate = true;
+      particleMaterial.opacity = 0.6 + Math.sin(time * 0.005) * 0.15;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    });
+
+    // Scroll reveal
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.learn-box, .feature-card, .about-card, .explain-box').forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < window.innerHeight - 100 && !el.classList.contains('revealed')) {
+          el.classList.add('revealed');
+        }
+      });
+    }, { passive: true });
+
+    // Sound effect system for smooth clicks and interactions
+    function playClickSound(type = 'click') {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioContext.currentTime;
+
+        if (type === 'click') {
+          // Smooth clicking sound
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          const filter = audioContext.createBiquadFilter();
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioContext.destination);
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.15);
+
+          filter.type = 'highpass';
+          filter.frequency.setValueAtTime(600, now);
+
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+          osc.start(now);
+          osc.stop(now + 0.15);
+        }
+      } catch (e) {
+        // Sound disabled
+      }
+    }
+
+
+
+    // Attach sound to select elements
+    document.querySelectorAll('select').forEach(select => {
+      select.addEventListener('change', () => {
+        playClickSound('click');
+      });
+    });
+
+    // Attach sound to calculator button
+    const calcBtn = document.querySelector('#calculator button');
+    if (calcBtn) {
+      calcBtn.addEventListener('click', () => {
+        playClickSound('click');
+      });
+    }
+
+    // Scroll animation fix - ensure animations trigger properly
+    window.addEventListener('load', () => {
+      document.querySelectorAll('[class*="animation"]').forEach(el => {
+        el.style.willChange = 'transform, opacity';
+      });
+    });
+
+    // Enhanced audit with realistic analysis
+    function runAudit() {
+      const btn = document.querySelector('#calculator button');
+      btn.disabled = true;
+      btn.innerHTML = '🔄 Analyzing...';
+      const resultBox = document.getElementById("scoreResult");
+      resultBox.innerHTML = '<div class="report-title" style="text-align: center;">🔄 Running Privacy Analysis...</div>';
+
+      setTimeout(() => {
+        const w1 = Number(document.getElementById("w1").value);
+        const w2 = Number(document.getElementById("w2").value);
+        const w3 = Number(document.getElementById("w3").value);
+        const d1 = Number(document.getElementById("d1").value);
+        const d2 = Number(document.getElementById("d2").value);
+        const d3 = Number(document.getElementById("d3").value);
+        const p1 = Number(document.getElementById("p1").value);
+        const p2 = Number(document.getElementById("p2").value);
+        const p3 = Number(document.getElementById("p3").value);
+        const s1 = Number(document.getElementById("s1").value);
+        const s2 = Number(document.getElementById("s2").value);
+        const s3 = Number(document.getElementById("s3").value);
+
+        const wallet = Math.round((w1 + w2 + w3) / 30 * 100);
+        const dapp = Math.round((d1 + d2 + d3) / 30 * 100);
+        const privacy = Math.round((p1 + p2 + p3) / 30 * 100);
+        const device = Math.round((s1 + s2 + s3) / 30 * 100);
+        const finalScore = Math.round(wallet * 0.4 + dapp * 0.25 + privacy * 0.2 + device * 0.15);
+
+        let statusEmoji = finalScore >= 80 ? '🟢' : finalScore >= 60 ? '🟡' : '🔴';
+        let statusText = finalScore >= 80 ? 'Excellent' : finalScore >= 60 ? 'Good' : 'Needs Work';
+
+        // Work out which area needs Seismic the most
+        const scoreAreas = [
+          { key: 'wallet', label: 'wallet hygiene', value: wallet },
+          { key: 'dapp', label: 'dApp exposure', value: dapp },
+          { key: 'privacy', label: 'on-chain privacy', value: privacy },
+          { key: 'device', label: 'device security', value: device }
+        ].sort((a, b) => a.value - b.value);
+
+        const weakest = scoreAreas[0];
+
+        let weakestSeismicHelp = '';
+        if (weakest.key === 'wallet') {
+          weakestSeismicHelp = 'Seismic is building privacy-by-default accounts and transaction routing, so even if wallets are reused today, balances and history are shielded at the protocol level when Seismic mainnet goes live.';
+        } else if (weakest.key === 'dapp') {
+          weakestSeismicHelp = 'Seismic integrates policy-aware execution and built-in transaction screening, so dApps can automatically enforce safer permissions and privacy rules for you once the network is live.';
+        } else if (weakest.key === 'privacy') {
+          weakestSeismicHelp = 'Seismic uses encrypted execution and private state, so transfers, positions, and balances are hidden from public chain analysis by default when the chain launches.';
+        } else if (weakest.key === 'device') {
+          weakestSeismicHelp = 'Seismic is designed to plug into hardware wallets and secure signing flows, so critical keys stay on hardened devices while the chain handles privacy and compliance under the hood.';
+        }
+
+        let tierIntro;
+        if (finalScore >= 80) {
+          tierIntro = 'Your setup is already strong for today’s public chains.';
+        } else if (finalScore >= 60) {
+          tierIntro = 'You have a solid baseline, but there are clear places to tighten your privacy.';
+        } else {
+          tierIntro = 'Right now your privacy posture has real gaps on today’s public chains.';
+        }
+
+        const recommendation = `${tierIntro} Your weakest area is <strong>${weakest.label}</strong>. ${weakestSeismicHelp} Seismic isn\'t live yet, but these problems are exactly what its privacy-first EVM is being built to solve — coming soon.`;
+
+        const auditDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        resultBox.innerHTML = `
+      <div style="text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid rgba(223,122,176,0.2);">
+        <div class="report-title">✅ Privacy Audit Report</div>
+        <div style="color:#5a6370;font-size:0.85rem;margin-top:8px;">Generated ${auditDate}</div>
+        <div class="score-gauge" style="margin-top:30px;">
+          <svg viewBox="0 0 200 200">
+            <circle class="gauge-bg" cx="100" cy="100" r="80"/>
+            <circle class="gauge-fill" cx="100" cy="100" r="80" stroke="${finalScore >= 80 ? '#4ade80' : finalScore >= 60 ? '#fbbf24' : '#ef4444'}" stroke-dasharray="${2 * Math.PI * 80}" stroke-dashoffset="${2 * Math.PI * 80}" id="gaugeFill" style="animation:gaugePulse 3s ease-in-out infinite;"/>
+          </svg>
+          <div class="gauge-score">
+            <div class="gauge-number" id="gaugeNum" style="color:${finalScore >= 80 ? '#4ade80' : finalScore >= 60 ? '#fbbf24' : '#ef4444'}">0%</div>
+            <div class="gauge-label">${statusEmoji} ${statusText}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin: 40px 0; padding: 30px; background: rgba(25, 15, 25, 0.5); border: 1px solid rgba(223, 122, 176, 0.2); border-radius: 12px;">
+        <div id="pieChartContainer" style="text-align: center; margin-bottom: 25px; display: flex; align-items: center; justify-content: center;"></div>
+        <div id="pieChartLegend" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; text-align: center;"></div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">💼 Wallet</div>
+          <div class="metric-value">${wallet}%</div>
+          <div class="metric-bar">
+            <div class="metric-bar-fill" style="width: 0%; animation: fillBar ${0.8 + 0.1}s ease-out forwards;"></div>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-label">🌐 dApp Safety</div>
+          <div class="metric-value">${dapp}%</div>
+          <div class="metric-bar">
+            <div class="metric-bar-fill" style="width: 0%; animation: fillBar ${0.8 + 0.2}s ease-out forwards;"></div>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-label">📝 Privacy</div>
+          <div class="metric-value">${privacy}%</div>
+          <div class="metric-bar">
+            <div class="metric-bar-fill" style="width: 0%; animation: fillBar ${0.8 + 0.3}s ease-out forwards;"></div>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-label">🖥️ Device</div>
+          <div class="metric-value">${device}%</div>
+          <div class="metric-bar">
+            <div class="metric-bar-fill" style="width: 0%; animation: fillBar ${0.8 + 0.4}s ease-out forwards;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation">
+        <div class="recommendation-title">💡 Recommendation</div>
+        <p style="margin: 0; color: #e8ecf1; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);">${recommendation}</p>
+      </div>
+    `;
+
+        // Draw pie chart and legend
+        setTimeout(() => {
+          const pieContainer = document.getElementById('pieChartContainer');
+          const legendContainer = document.getElementById('pieChartLegend');
+          if (pieContainer) {
+            pieContainer.innerHTML = '';
+            drawPieChart(pieContainer, wallet, dapp, privacy, device, finalScore);
+          }
+          if (legendContainer) {
+            legendContainer.innerHTML = '';
+            const labels = [
+              { label: 'Wallet Hygiene', color: '#df7ab0', icon: '', value: wallet },
+              { label: 'dApp Safety', color: '#d46aa0', icon: '', value: dapp },
+              { label: 'Privacy', color: '#c45a90', icon: '', value: privacy },
+              { label: 'Device Security', color: '#b44a80', icon: '', value: device }
+            ];
+            labels.forEach(l => {
+              const item = document.createElement('div');
+              item.style.display = 'flex';
+              item.style.alignItems = 'center';
+              item.style.justifyContent = 'center';
+              item.style.gap = '8px';
+              item.innerHTML = `<span style="font-size:1.3em;">${l.icon}</span><span style="width:18px;height:18px;display:inline-block;border-radius:4px;background:${l.color};margin-right:6px;"></span><span style="color:#e8ecf1;font-weight:600;">${l.label}</span> <span style="color:#df7ab0;font-weight:700;margin-left:6px;">${l.value}%</span>`;
+              legendContainer.appendChild(item);
+            });
+          }
+        }, 100);
+
+        // Animate bars
+        setTimeout(() => {
+          const bars = resultBox.querySelectorAll('.metric-bar-fill');
+          const values = [wallet, dapp, privacy, device];
+          bars.forEach((bar, i) => {
+            bar.style.width = values[i] + '%';
+          });
+        }, 100);
+
+        // Animate gauge
+        setTimeout(() => {
+          const gaugeFill = document.getElementById('gaugeFill');
+          const gaugeNum = document.getElementById('gaugeNum');
+          if (gaugeFill) {
+            const circ = 2 * Math.PI * 80;
+            gaugeFill.style.strokeDashoffset = circ - (finalScore / 100) * circ;
+          }
+          if (gaugeNum) {
+            let c = 0;
+            const st = performance.now();
+            function tick(now) {
+              const p = Math.min((now - st) / 1500, 1);
+              c = Math.round(p * finalScore);
+              gaugeNum.textContent = c + '%';
+              if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+          }
+        }, 200);
+
+        btn.disabled = false;
+        btn.innerHTML = ' Run Audit ';
+        playClickSound('click');
+      }, 3500);
+    }
+
+    // Pie chart drawing function
+    function drawPieChart(container, wallet, dapp, privacy, device, total) {
+      const values = [wallet, dapp, privacy, device];
+      const colors = ['#df7ab0', '#d46aa0', '#c45a90', '#b44a80'];
+      const radius = 70;
+      const centerX = 100;
+      const centerY = 100;
+      let currentAngle = -Math.PI / 2;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '200');
+      svg.setAttribute('height', '200');
+      svg.setAttribute('viewBox', '0 0 200 200');
+      svg.setAttribute('style', 'filter: drop-shadow(0 0 20px rgba(223, 122, 176, 0.4)); max-width: 100%; height: auto;');
+      // Background circle
+      const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      bgCircle.setAttribute('cx', centerX);
+      bgCircle.setAttribute('cy', centerY);
+      bgCircle.setAttribute('r', radius + 5);
+      bgCircle.setAttribute('fill', 'rgba(223, 122, 176, 0.1)');
+      svg.appendChild(bgCircle);
+      // Pie slices
+      const rawSum = values.reduce((a, b) => a + b, 0);
+      const safeValues = rawSum === 0 ? [1, 1, 1, 1] : values;
+      const sum = safeValues.reduce((a, b) => a + b, 0);
+
+      safeValues.forEach((value, i) => {
+        const sliceAngle = (value / sum) * Math.PI * 2;
+        const startX = centerX + radius * Math.cos(currentAngle);
+        const startY = centerY + radius * Math.sin(currentAngle);
+        currentAngle += sliceAngle;
+        const endX = centerX + radius * Math.cos(currentAngle);
+        const endY = centerY + radius * Math.sin(currentAngle);
+        const largeArc = sliceAngle > Math.PI ? 1 : 0;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M ${centerX} ${centerY} L ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 1 ${endX} ${endY} Z`;
+        path.setAttribute('d', d);
+        path.setAttribute('fill', colors[i]);
+        path.setAttribute('stroke', 'rgba(11, 15, 20, 0.8)');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('class', `pie-slice-${i}`);
+        svg.appendChild(path);
+        // Pie slice label
+        const midAngle = currentAngle - sliceAngle / 2;
+        const labelRadius = radius + 18;
+        const labelX = centerX + labelRadius * Math.cos(midAngle);
+        const labelY = centerY + labelRadius * Math.sin(midAngle);
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', labelX);
+        label.setAttribute('y', labelY);
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('font-size', '13');
+        label.setAttribute('font-weight', '600');
+        label.setAttribute('fill', colors[i]);
+        label.textContent = values[i] + '%';
+        svg.appendChild(label);
+      });
+      // Center circle for donut effect
+      const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      centerCircle.setAttribute('cx', centerX);
+      centerCircle.setAttribute('cy', centerY);
+      centerCircle.setAttribute('r', radius * 0.48);
+      centerCircle.setAttribute('fill', '#0a0a0f');
+      svg.appendChild(centerCircle);
+      // Center text
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', centerX);
+      text.setAttribute('y', centerY + 2);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dominant-baseline', 'middle');
+      text.setAttribute('font-size', '32');
+      text.setAttribute('font-weight', 'bold');
+      text.setAttribute('fill', '#df7ab0');
+      text.textContent = total + '%';
+      svg.appendChild(text);
+      container.appendChild(svg);
+    }
+
+    document.querySelectorAll("#calculator select").forEach(sel => {
+      sel.addEventListener("change", () => {
+        let done = 0;
+        document.querySelectorAll("#calculator select").forEach(s => {
+          if (s.selectedIndex !== 0) done++;
+        });
+        document.getElementById("progressFill").style.width = Math.round((done / 12) * 100) + "%";
+      });
+    });
+
+    /* ===== CUSTOM CURSOR ===== */
+    (function () {
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+
+      const ring = document.getElementById('cursorRing');
+      const dot = document.getElementById('cursorDot');
+      if (!ring || !dot) return;
+
+      let mouseX = 0, mouseY = 0;
+      let ringX = 0, ringY = 0;
+      let visible = false;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!visible) {
+          visible = true;
+          ring.style.opacity = '1';
+          dot.style.opacity = '1';
+        }
+      });
+
+      document.addEventListener('mouseleave', () => {
+        visible = false;
+        ring.style.opacity = '0';
+        dot.style.opacity = '0';
+      });
+
+      document.addEventListener('mouseenter', () => {
+        visible = true;
+        ring.style.opacity = '1';
+        dot.style.opacity = '1';
+      });
+
+      document.addEventListener('mousedown', () => {
+        ring.classList.add('clicking');
+      });
+
+      document.addEventListener('mouseup', () => {
+        ring.classList.remove('clicking');
+      });
+
+      // Hover detection for interactive elements
+      const interactiveSelectors = 'a, button, select, .feature-card, .learn-box, .about-card, .explain-box, .backer-card, .hero button, nav a, .funding-badge, .backers-footer a';
+
+      document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+          ring.classList.add('active');
+          dot.classList.add('active');
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+          ring.classList.remove('active');
+          dot.classList.remove('active');
+        }
+      });
+
+      // Smooth trailing animation
+      function animateCursor() {
+        // slightly faster easing so it feels less “laggy” while still smooth
+        ringX += (mouseX - ringX) * 0.25;
+        ringY += (mouseY - ringY) * 0.25;
+
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+        dot.style.left = mouseX + 'px';
+        dot.style.top = mouseY + 'px';
+
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+    })();
+
+    /* ===== CLICK RIPPLE ON BUTTONS ===== */
+    document.querySelectorAll('button, .about-card a, .backers-footer a, .funding-badge').forEach(btn => {
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      btn.addEventListener('click', function (e) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple-effect');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    /* ===== CARD SPOTLIGHT FOLLOW ===== */
+    document.querySelectorAll('.feature-card, .learn-box, .about-card, .explain-box, .backer-card').forEach(card => {
+      const spotlight = document.createElement('div');
+      spotlight.classList.add('card-spotlight');
+      card.style.position = 'relative';
+      card.appendChild(spotlight);
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        spotlight.style.left = (e.clientX - rect.left) + 'px';
+        spotlight.style.top = (e.clientY - rect.top) + 'px';
+        spotlight.style.opacity = '1';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        spotlight.style.opacity = '0';
+      });
+    });
+
+    /* ===== SCROLL PROGRESS BAR ===== */
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    }, { passive: true });
+
+    /* ===== SUBTLE MAGNETIC BUTTONS (max 3px pull) ===== */
+    (function setupMagneticButtons() {
+      const els = document.querySelectorAll('button, .about-card a, .funding-badge');
+      els.forEach(el => {
+        let raf = 0;
+        let lastEvent = null;
+
+        // Ensure defaults
+        el.style.setProperty('--mag-x', '0px');
+        el.style.setProperty('--mag-y', '0px');
+
+        function applyMag() {
+          raf = 0;
+          if (!lastEvent) return;
+
+          const rect = el.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = lastEvent.clientX - cx;
+          const dy = lastEvent.clientY - cy;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < 80) {
+            const clampX = Math.max(-3, Math.min(3, dx * 0.04));
+            const clampY = Math.max(-3, Math.min(3, dy * 0.04));
+            el.style.setProperty('--mag-x', clampX.toFixed(2) + 'px');
+            el.style.setProperty('--mag-y', clampY.toFixed(2) + 'px');
+          } else {
+            el.style.setProperty('--mag-x', '0px');
+            el.style.setProperty('--mag-y', '0px');
+          }
+        }
+
+        el.addEventListener('mousemove', (e) => {
+          lastEvent = e;
+          if (!raf) raf = requestAnimationFrame(applyMag);
+        }, { passive: true });
+
+        el.addEventListener('mouseleave', () => {
+          lastEvent = null;
+          el.style.setProperty('--mag-x', '0px');
+          el.style.setProperty('--mag-y', '0px');
+        });
+      });
+    })();
+
+    /* ===== $17M ANIMATED COUNTER ===== */
+    const fundingEl = document.getElementById('fundingCounter');
+    if (fundingEl) {
+      let counted = false;
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !counted) {
+            counted = true;
+            let current = 0;
+            const target = 17;
+            const duration = 2000;
+            const startTime = performance.now();
+            function updateCounter(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              current = Math.round(eased * target);
+              fundingEl.textContent = '$' + current + 'M';
+              if (progress < 1) requestAnimationFrame(updateCounter);
+            }
+            requestAnimationFrame(updateCounter);
+          }
+        });
+      }, { threshold: 0.5 });
+      counterObserver.observe(fundingEl.closest('.backers-section') || fundingEl);
+    }
+
+    /* ===== STAGGERED TEXT REVEAL ===== */
+    document.querySelectorAll('.learn-section h2, .features-section h2, .backers-section h2, .explain-section h2, .about-title, .learn-subtitle, .backers-subtitle').forEach(el => {
+      el.classList.add('text-reveal');
+    });
+    const textObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.text-reveal').forEach(el => textObserver.observe(el));
+
+    /* ===== FLOATING LOGO WATERMARKS ===== */
+    const watermarkPositions = [
+      { section: '.learn-section', left: '-80px', top: '20%' },
+      { section: '.features-section', right: '-60px', top: '30%' },
+      { section: '.explain-section', left: '-100px', top: '40%' }
+    ];
+    watermarkPositions.forEach(wp => {
+      const section = document.querySelector(wp.section);
+      if (section) {
+        section.style.position = 'relative';
+        const wm = document.createElement('div');
+        wm.classList.add('logo-watermark');
+        wm.innerHTML = '<img src="images/logo.png" alt="">';
+        if (wp.left) wm.style.left = wp.left;
+        if (wp.right) wm.style.right = wp.right;
+        wm.style.top = wp.top;
+        section.appendChild(wm);
+      }
+    });
+    // Parallax for watermarks
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.logo-watermark').forEach(wm => {
+        const speed = 0.05;
+        const offset = window.scrollY * speed;
+        wm.style.transform = `translateY(${offset}px) rotate(${offset * 0.02}deg)`;
+      });
+    }, { passive: true });
+
+    /* ===== SECTION LOGO ACCENT ICONS ===== */
+    const accentSections = [
+      { sel: '.learn-section h2', text: ' Learn Seismic Basics' },
+      { sel: '.features-section h2', text: ' What Seismic Gives You' },
+      { sel: '.explain-section h2', text: 'What is Seismic?' }
+    ];
+    accentSections.forEach(s => {
+      const h = document.querySelector(s.sel);
+      if (h) {
+        const img = document.createElement('img');
+        img.src = 'images/logo.png';
+        img.alt = '';
+        img.classList.add('section-logo-accent');
+        h.insertBefore(img, h.firstChild);
+      }
+    });
+
+  </script>
+</body>
+
+</html>
